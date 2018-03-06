@@ -5,6 +5,7 @@ import datetime
 #DB생성(파일)
 conn = sqlite3.connect('C:/Django/workspace/python-class1/section5/database/sqlite.db')
 
+#날짜 생성
 now = datetime.datetime.now()
 print('now',now)
 
@@ -14,9 +15,6 @@ print('nowDatetime',nowDatetime)
 #sqlite3 버전확인
 print('sqlite3.version : ',sqlite3.version)
 print('sqlite3.sqlite_version',sqlite3.sqlite_version)
-
-#날짜 생성
-
 
 #DB생성 & Autocommit
 conn = sqlite3.connect('c:/section5/database/sqlite.db', isolation_level=None)

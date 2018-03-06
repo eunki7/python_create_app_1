@@ -29,7 +29,7 @@ db.upsert({'email': 'test1@naver.com', 'login': True}, SQL.name == 'kim')
 
 #데이터 삭제
 db.remove(doc_ids=[2,3])
-
+db.remove(SQL.name == 'park')
 #전체 조회
 print(db.all())
 
