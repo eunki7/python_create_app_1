@@ -9,8 +9,7 @@ class TestForm(QMainWindow):
 
     def setupUI(self):
         self.setWindowTitle("PyQT Test")
-
-        #self.setGeometry(800, 400, 300, 200)
+        self.setGeometry(800,400,500,300)
 
         btn_1 = QPushButton("Click1", self)
         btn_2 = QPushButton("Click2", self)
@@ -25,10 +24,12 @@ class TestForm(QMainWindow):
         btn_3.clicked.connect(QCoreApplication.instance().quit)
 
     def btn_1_clicked(self):
-        QMessageBox.about(self, "message", "clicked")
+        QMessageBox.about(self,"message","clicked")
 
     def btn_2_clicked(self):
-        print('button clicked')
+        print("Button Clicked!")
+
+
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)

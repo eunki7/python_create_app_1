@@ -2,9 +2,10 @@ import sys
 from PyQt5.QtWidgets import *
 
 app = QApplication(sys.argv)
-label = QLabel("PyQt Label Test")
+#print(sys.argv)
+label = QLabel("PyQT First Test!")
 label.show()
 
-print("Before loop")
+print("Before Loop")
 app.exec_()
-print("After loop")
+print("After Loop")
