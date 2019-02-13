@@ -175,7 +175,7 @@ class Main(QMainWindow, Ui_MainWindow):
         self.plainTextEdit.appendPlainText(app_msg) #insertPlainText
 
         #활동 로그 저장(또는 DB를 사용 추천)
-        with open('C:/Django/workspace/python-class1/section6/log/log.txt','a') as f:
+        with open('txt 저장 경로 입력','a') as f:
             f.write(app_msg+'\n')
 
     @pyqtSlot(int)

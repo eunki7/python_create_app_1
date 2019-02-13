@@ -10,7 +10,7 @@ class AuthDialog(QDialog):
         self.user_pw = None
 
     def setupUI(self):
-        self.setGeometry(300,1800,300,100)
+        #self.setGeometry(300,1800,300,100) #로그인 창 실행이 안 될 경우 주석 처리(윈도우10)
         self.setWindowTitle("Sign In")
         self.setFixedSize(300,100)
 
