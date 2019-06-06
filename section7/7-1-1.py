@@ -17,6 +17,8 @@ from selenium.webdriver.common.keys import Keys
 chrome_options = Options()
 # Headless 모드 관련
 chrome_options.add_argument("--headless")
+# 사운드 뮤트
+# chrome_options.add_argument("--mute-audio")
 
 # webdriver 설정(Chrome, Firefox 등) - Headless 모드
 browser = webdriver.Chrome('../webdriver/chrome/chromedriver.exe', options=chrome_options)
