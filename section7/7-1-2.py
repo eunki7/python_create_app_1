@@ -1,9 +1,15 @@
 # Section7-2
 # Selenium 심화 크롤링(2)
 
+import sys
+import io
+
+sys.stdout = io.TextIOWrapper(sys.stdout.detach(), encoding = 'utf-8')
+sys.stderr = io.TextIOWrapper(sys.stderr.detach(), encoding = 'utf-8')
+
 # 시간 처리 관련
 import time
-# bs4 임포트
+# bs4
 from bs4 import BeautifulSoup
 # selenium 관련 임포트
 from selenium import webdriver
@@ -16,7 +22,7 @@ from selenium.webdriver.common.keys import Keys
 import urllib.request as req
 # 이미지 바이트 처리
 from io import BytesIO
-# 엑셀 처리 임포트
+# 엑셀 처리
 import xlsxwriter
 
 # 크롬 옵션
@@ -24,13 +30,13 @@ chrome_options = Options()
 # Headless 모드 관련
 chrome_options.add_argument("--headless")
 # 사운드 뮤트
-# chrome_options.add_argument("--mute-audio")
+chrome_options.add_argument("--mute-audio")
 
-# webdriver 설정(Chrome, Firefox 등) - Headless 모드
-browser = webdriver.Chrome('./webdriver/chrome/chromedriver.exe', options=chrome_options)
+# webdriver 설정(Chrome) - Headless 모드
+# browser = webdriver.Chrome("C:/Django/workspace/python-class1/section7/webdriver/chrome/chromedriver.exe", options=chrome_options)
 
-# webdriver 설정(Chrome, Firefox 등) - 일반 모드
-# browser = webdriver.Chrome('./webdriver/chrome/chromedriver.exe')
+# webdriver 설정(Chrome) - 일반 모드
+browser = webdriver.Chrome("C:/Django/workspace/python-class1/section7/webdriver/chrome/chromedriver.exe")
 
 # 엑셀 처리 선언
 workbook = xlsxwriter.Workbook("C:/you_crawl_result.xlsx")
@@ -47,47 +53,46 @@ browser.implicitly_wait(5)
 browser.set_window_size(1920, 1280)
 
 # 페이지 이동
-browser.get('https://www.youtube.com/watch?v=XaBfX5wa3EQ')
+browser.get('https://www.youtube.com/watch?v=8CHp4j6bbaQ')
 
-# 5초 대기
+# 5초간 대기
 time.sleep(5)
 
 # html 포커스 주기 위한 코드
 # Explicitly wait(명시적 대기)
-WebDriverWait(browser, 5) \
-    .until(
-    EC.presence_of_element_located((By.TAG_NAME, 'html'))).send_keys(Keys.PAGE_DOWN)
+WebDriverWait(browser, 5).until(EC.presence_of_element_located((By.TAG_NAME, 'html'))).send_keys(Keys.PAGE_DOWN)
 
-# 2초 대기
+# 2초간 대기
 time.sleep(2)
 
 # 페이지 내용
 # print('Before Page Contents : {}'.format(browser.page_source))
 
-# 페이지 이동 시 새로운 데이터 수신 완료 위한 대기 시간
-scraoll_pause_time = 4
+# 페이지 이동 시 새로운 데이터 수신 완료위한 대기 시간
+scroll_pause_time = 4
 
 # 현재 화면 페이지 높이
-# IE: document.body.scrollHeight
+# IE : document.body.scrollHeight
 last_height = browser.execute_script("return document.documentElement.scrollHeight")
 
 print()
 
-# 모든 댓글 데이터가 수신 완료 될 때까지 반복
+# 모든 댓글 데이터가 수신(렌더링) 완료 될 때까지 반복
+
 while True:
     # 스크롤바 이동
-    browser.execute_script("window.scrollTo(0, document.documentElement.scrollHeight);")
+    browser.execute_script("window.scrollTo(0, document.documentElement.scrollHeight)")
 
     # 대기
-    time.sleep(scraoll_pause_time)
+    time.sleep(scroll_pause_time)
 
-    # 스크롤바 이동 -> 새로운 데이터 수신 -> 현재 렌더링 된 화면 높이 새로 구한다.
+    # 스크롤바 이동 -> 새로운 데이터 렌더링 -> 현재 높이를 구한다.
     new_height = browser.execute_script("return document.documentElement.scrollHeight")
 
-    # 이전 높이, 새로운 높이 비교
-    print('Last Height : {}, Current Height : {}'.format(last_height, new_height))
+    # 이전 높이와 새로운 높이 비교
+    print("Last Height : {}, Current Height : {}".format(last_height, new_height))
 
-    # 새로운 데이터 수신이 없을 경우 종료
+    # 새로운 데이터 렌더링이 없을 경우 종료
     if new_height == last_height:
         # While 종료
         break
@@ -111,8 +116,7 @@ print()
 
 # 전체 추천 카운트
 print('Total Like Count : {}'.format(top_level[0].text.strip()))
-# 전체 비추 카운트
-print('Total Dislike Count : {}'.format(top_level[1].text.strip()))
+print('Total DisLike Count : {}'.format(top_level[1].text.strip()))
 
 # 엑셀 행 수
 ins_cnt = 2
@@ -120,9 +124,8 @@ ins_cnt = 2
 # Dom 반복
 for dom in comment:
     print()
-
     # 이미지 URL 정보
-    img_src = dom.select_one('#img').get('src')
+    img_src = dom.select_one("#img").get('src')
     # 작성자
     author = dom.select_one('#author-text > span').text.strip()
     # 댓글 본문
@@ -130,6 +133,7 @@ for dom in comment:
     # 좋아요
     posi_cnt = dom.select_one('#vote-count-middle').text.strip()
 
+    # 이미지 URL 정보
     print('Thumbnail Image URLS : {}'.format(img_src if img_src else 'None'))
     # 작성자
     print('Author : {}'.format(author))
@@ -137,17 +141,19 @@ for dom in comment:
     print('Content Text : {}'.format(content))
     # 좋아요
     print('Vote Positive Count : {}'.format(posi_cnt))
+    print()
 
     # 엑셀 저장(텍스트)
     worksheet.write('A%s' % ins_cnt, author)
     worksheet.write('B%s' % ins_cnt, content)
     worksheet.write('C%s' % ins_cnt, posi_cnt)
 
-    # 엑셀 저장(썸네일 이미지)
-    # 이미지 URL이 없을 경우 처리
+    # 엑셀 저장(이미지)
     if img_src:
         # 이미지 요청 후 바이트 변환
         img_data = BytesIO(req.urlopen(img_src).read())
+        # 이미지 데이터 확인
+        print(img_data)
         worksheet.insert_image('D%s' % ins_cnt, author, {'image_data': img_data})
     else:
         worksheet.write('D%s' % ins_cnt, 'None')
